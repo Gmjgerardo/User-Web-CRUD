@@ -12,7 +12,7 @@ if (isset($dataToView["data"])) {
         </div>
         <div class="mb-3">
             <label for="fullLastName" class="form-label">Apellidos</label>
-            <input type="text" class="form-control" name="fullLastName" value="<?= $lastName . $secondLastName ?>">
+            <input type="text" class="form-control" name="fullLastName" value="<?= "$lastName $secondLastName" ?>">
         </div>
         <div class=" mb-3">
             <label for="email" class="form-label">Correo electronico</label>
@@ -30,10 +30,14 @@ if (isset($dataToView["data"])) {
             <label for="confirm" class="form-label">Confirma contraseña</label>
             <input type="password" class="form-control" name="confirm">
         </div>
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" name="adminCheck" <?php if ($rol == 1) echo "checked"; ?>>
-            <label class="form-check-label" for="adminCheck">Administrador</label>
-        </div>
+
+        <!-- Campo extra para los administradores -->
+        <?php if (isset($_SESSION["login"]["rol"]) and $_SESSION["login"]["rol"] == 1) { ?>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" name="adminCheck" <?php if ($rol == 1) echo "checked"; ?>>
+                <label class="form-check-label" for="adminCheck">Administrador</label>
+            </div>
+        <?php } ?>
         <div class="w-100 d-flex justify-content-evenly mt-2">
             <button type="submit" class="btn btn-primary">Registrar</button>
             <a class="btn btn-danger" href=<?= ROOT ?>>Cancelar</a>
