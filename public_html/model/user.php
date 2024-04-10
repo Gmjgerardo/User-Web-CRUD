@@ -96,4 +96,19 @@ class User
             echo $th->getMessage();
         }
     }
+
+    public function deleteUserById($id)
+    {
+        try {
+            $this->getConnection();
+            $query = "DELETE FROM " . $this->table . " WHERE id = ?";
+
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param("i", $id);
+
+            return $stmt->execute();
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
 }

@@ -52,6 +52,27 @@ class userController
         echo $id;
     }
 
+    public function delete($id = null)
+    {
+        $this->verifyUserPermission();
+
+        $this->view = 'user_delete';
+        $this->page_title = 'Eliminar Usuario';
+
+        if (isset($_GET["id"])) $id = $_GET["id"];
+
+        return ($this->userObj->getUserById($id));
+    }
+
+    public function confirmDelete()
+    {
+        $this->verifyUserPermission();
+
+        $this->view = 'user_delete';
+        $this->page_title = 'Eliminar Usuario';
+        return $this->userObj->deleteUserById($_POST["id"]);
+    }
+
     public function verifyUserPermission()
     {
         if ($_SESSION["login"]["rol"] < 1) header('location:' . ROOT . '?controller=user&action=list&msg=No tienes los permisos requeridos, consulta a un Administrador');
