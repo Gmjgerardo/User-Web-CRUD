@@ -20,7 +20,8 @@ class User
         $this->getConnection();
         $query = "SELECT u.id, u.nombres, u.apellido_paterno, u.apellido_materno, u.usuario, r.nombre, u.fecha_creacion
         FROM usuario u, rol r
-        WHERE u.rol = r.id";
+        WHERE u.rol = r.id
+        ORDER BY u.id ASC";
         $result = $this->connection->query($query);
 
         return $result->fetch_all();
@@ -87,11 +88,7 @@ class User
             $stmt = $this->connection->prepare($query);
             $stmt->bind_param("ssssssi", $names, $lastName, $secondLastName, $username, $email, $hash, $isAdmin);
 
-            if ($stmt->execute()) {
-                echo "Se ejecuto la query!";
-            } else {
-                echo "Hubo un error";
-            }
+            return $stmt->execute();
         } catch (\Throwable $th) {
             echo $th->getMessage();
         }

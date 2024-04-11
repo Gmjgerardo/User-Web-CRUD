@@ -7,7 +7,7 @@
     <?php } ?>
 
     <?php
-    if (count($dataToView["data"]) > 0) { ?>
+    if (isset($dataToView["data"]) && count($dataToView["data"]) > 0) { ?>
         <table class="table">
             <thead>
                 <tr>

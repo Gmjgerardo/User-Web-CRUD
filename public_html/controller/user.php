@@ -10,16 +10,20 @@ class userController
 
     public function __construct()
     {
-        // Verificar si se logueo un usuario, en caso contrario redirigirlo al Login
-        if (!isset($_SESSION["login"])) header('location:' . ROOT);
+        // Verificar si se logueo un usuario, o si esta en proceso de registro en caso contrario redirigirlo al Login
+        if (!isset($_SESSION["onRegister"]) && !isset($_SESSION["login"])) header('location:' . ROOT);
         else {
-            $this->view = 'user_list';
-            $this->page_title = 'Usuario';
+            // Permitir la interacción con la BD para registrar el usuario
             $this->userObj = new User();
 
-            // Obtener rol del usuario logueado y almacenarlo en la sesión
-            $userRol = $this->userObj->getRol($_SESSION["login"]["user"]);
-            $_SESSION['login']["rol"] = $userRol;
+            if (isset($_SESSION["login"])) {
+                $this->view = 'user_list';
+                $this->page_title = 'Usuario';
+
+                // Obtener rol del usuario logueado y almacenarlo en la sesión
+                $userRol = $this->userObj->getRol($_SESSION["login"]["user"]);
+                $_SESSION['login']["rol"] = $userRol;
+            }
         }
     }
 
@@ -37,19 +41,26 @@ class userController
         if (isset($_GET["id"])) {
             $this->page_title = 'Edición de usuario';
             $id = $_GET["id"];
-            return $this->userObj->getUserById($id);
+
+            if ($result = $this->userObj->getUserById($id)) return $result;
+
+            // En caso de no existir el usuario, redirigir al listado
+            else header('location:' . ROOT);
         } else $this->page_title = 'Registro de usuario';
     }
 
     public function save()
     {
-        $this->verifyUserPermission();
-        $this->view = 'user_form';
-        $this->page_title = 'Usuario Registrado';
+        $this->view = "user_confirm";
+        $this->page_title = "Nuevo Registro";
 
-        $id = $this->userObj->save($_POST);
-        $_GET["response"] = true;
-        echo $id;
+        // Controlar si es Admin o si esta registrandose por primera vez
+        if (isset($_SESSION["onRegister"]) or $_SESSION["login"]["rol"] >= 1) {
+            $result = $this->userObj->save($_POST);
+
+            unset($_SESSION["onRegister"]);
+            return $result;
+        }
     }
 
     public function delete($id = null)

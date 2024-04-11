@@ -9,7 +9,8 @@
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" class="form-control" name="password">
             </div>
-            <button type="submit" class="btn btn-primary">Entrar</button>
+            <button type="submit" class="btn btn-primary w-100">Entrar</button>
+            <a class="btn btn-primary w-100 mt-2" href=<?= ROOT . "?controller=session&action=register" ?>>Registrarse</a>
         </form>
         <p class="text-danger"><?= (isset($_GET['msg'])) ? $_GET['msg'] : "" ?></p>
     </div>
