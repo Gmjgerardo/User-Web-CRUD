@@ -82,7 +82,10 @@ class User
         try {
             $this->getConnection();
             $secondLastName = null;
-            ['id' => $id, 'name' => $names, 'fullLastName' => $fullLastName, 'email' => $email, 'username' => $username] = $params;
+
+            // Segunda 'Capa de seguridaad': Formatear cada campo recibido para evitar ataques XSS
+            $formatedParams = array_map(fn ($field): string => htmlspecialchars($field), $params);
+            ['id' => $id, 'name' => $names, 'fullLastName' => $fullLastName, 'email' => $email, 'username' => $username] = $formatedParams;
 
             // Obtener contraseña en caso de que se haya enviado
             $password = $params['password'] ?? "";
