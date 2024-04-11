@@ -28,4 +28,10 @@
 /app/Config/database.php
 /vendors/*
 
+# Vscode project configurations
+/.vscode
+
+# Database
+crud_usuarios.sql
+
 # End of https://www.toptal.com/developers/gitignore/api/cakephp
