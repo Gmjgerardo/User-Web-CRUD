@@ -51,6 +51,19 @@ class User
         return $resultData;
     }
 
+    public function getId($username)
+    {
+        try {
+            $this->getConnection();
+            $query = sprintf("SELECT id FROM usuario WHERE usuario='%s'", $username);
+
+            $result = $this->connection->query($query);
+            return $result->fetch_row()[0];
+        } catch (\Throwable $th) {
+            echo "Error al buscar el id" . PHP_EOL;
+        }
+    }
+
     public function getRol($username)
     {
         try {

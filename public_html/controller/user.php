@@ -20,9 +20,13 @@ class userController
                 $this->view = 'user_list';
                 $this->page_title = 'Usuario';
 
+                // Obtener id del usuario logueado y almacenarlo en la sesión
+                $userId = $this->userObj->getId($_SESSION["login"]["user"]);
+                $_SESSION["login"]["id"] = $userId;
+
                 // Obtener rol del usuario logueado y almacenarlo en la sesión
                 $userRol = $this->userObj->getRol($_SESSION["login"]["user"]);
-                $_SESSION['login']["rol"] = $userRol;
+                $_SESSION["login"]["rol"] = $userRol;
             }
         }
     }
@@ -35,10 +39,13 @@ class userController
 
     public function edit($id = null)
     {
-        $this->verifyUserPermission();
+        $id = $_GET["id"];
+
+        if ($_SESSION["login"]["id"] != $id) $this->verifyUserPermission();
+
         $this->view = 'user_form';
 
-        if (isset($_GET["id"])) {
+        if ($id) {
             $this->page_title = 'Edición de usuario';
             $id = $_GET["id"];
 
