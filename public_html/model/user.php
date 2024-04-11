@@ -69,7 +69,7 @@ class User
         try {
             $this->getConnection();
             $secondLastName = null;
-            ['name' => $names, 'fullLastName' => $fullLastName, 'email' => $email, 'username' => $username, 'password' => $password, 'confirm' => $confirm] = $params;
+            ['id' => $id, 'name' => $names, 'fullLastName' => $fullLastName, 'email' => $email, 'username' => $username, 'password' => $password, 'confirm' => $confirm] = $params;
 
             // ToDo: Cambios para aceptar mas de dos roles distintos
             $isAdmin = isset($params["adminCheck"]) ? 1 : 0;
@@ -82,12 +82,20 @@ class User
             // Hashear y "Salar" la contraseña
             $hash = password_hash($password, PASSWORD_BCRYPT);
 
-            $query = "INSERT INTO $this->table 
-            (nombres, apellido_paterno, apellido_materno, usuario, correo, hash, rol)
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $this->connection->prepare($query);
-            $stmt->bind_param("ssssssi", $names, $lastName, $secondLastName, $username, $email, $hash, $isAdmin);
-
+            // Si la variable $id tiene información es porque se busca actualizar un registro
+            if ($id) {
+                $query = "UPDATE $this->table 
+                        SET nombres=?, apellido_paterno=?, apellido_materno=?, usuario=?, correo=?, rol=?
+                        WHERE id = ?";
+                $stmt = $this->connection->prepare($query);
+                $stmt->bind_param("sssssii", $names, $lastName, $secondLastName, $username, $email, $isAdmin, $id);
+            } else {
+                $query = "INSERT INTO $this->table 
+                        (nombres, apellido_paterno, apellido_materno, usuario, correo, hash, rol)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $stmt = $this->connection->prepare($query);
+                $stmt->bind_param("ssssssi", $names, $lastName, $secondLastName, $username, $email, $hash, $isAdmin);
+            }
             return $stmt->execute();
         } catch (\Throwable $th) {
             echo $th->getMessage();
