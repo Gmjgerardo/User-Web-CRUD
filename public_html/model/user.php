@@ -82,7 +82,10 @@ class User
         try {
             $this->getConnection();
             $secondLastName = null;
-            ['id' => $id, 'name' => $names, 'fullLastName' => $fullLastName, 'email' => $email, 'username' => $username, 'password' => $password, 'confirm' => $confirm] = $params;
+            ['id' => $id, 'name' => $names, 'fullLastName' => $fullLastName, 'email' => $email, 'username' => $username] = $params;
+
+            // Obtener contraseña en caso de que se haya enviado
+            $password = $params['password'] ?? "";
 
             // ToDo: Cambios para aceptar mas de dos roles distintos
             $isAdmin = isset($params["adminCheck"]) ? 1 : 0;

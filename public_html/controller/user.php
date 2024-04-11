@@ -39,7 +39,7 @@ class userController
 
     public function edit($id = null)
     {
-        $id = $_GET["id"];
+        $id = $_GET["id"] ?? false;
 
         if ($_SESSION["login"]["id"] != $id) $this->verifyUserPermission();
 
@@ -59,10 +59,10 @@ class userController
     public function save()
     {
         $this->view = "user_confirm";
-        $this->page_title = "Nuevo Registro";
+        $this->page_title = "Confirmación de modificaciones";
 
-        // Controlar si es Admin o si esta registrandose por primera vez
-        if (isset($_SESSION["onRegister"]) or $_SESSION["login"]["rol"] >= 1) {
+        // Controlar si esta logueado o si esta registrandose por primera vez
+        if (isset($_SESSION["onRegister"]) or isset($_SESSION["login"])) {
             $result = $this->userObj->save($_POST);
 
             unset($_SESSION["onRegister"]);
